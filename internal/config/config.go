@@ -18,9 +18,7 @@ type ServerConfig struct {
 	Port         string
 	GRPCPort     string
 	Environment  string
-	ReadTimeout  time.Duration // Timeout for reading request body
 	WriteTimeout time.Duration // Timeout for writing response
-	IdleTimeout  time.Duration // Idle connection timeout
 }
 
 type DatabaseConfig struct {
@@ -39,10 +37,9 @@ type RedisConfig struct {
 	Port         string
 	Password     string
 	DB           int
-	PoolSize     int           // Maximum number of socket connections
-	MinIdleConns int           // Minimum number of idle connections
-	MaxRetries   int           // Maximum number of retries
-	IdleTimeout  time.Duration // Close connections after remaining idle for this duration
+	PoolSize     int // Maximum number of socket connections
+	MinIdleConns int // Minimum number of idle connections
+	MaxRetries   int // Maximum number of retries
 }
 
 type AWSConfig struct {
@@ -60,7 +57,6 @@ type KafkaConfig struct {
 	Topic           string
 	ConsumerGroup   string
 	MaxMessageBytes int           // Maximum message bytes that the consumer will fetch
-	ReadTimeout     time.Duration // Timeout for reading messages
 	WriteTimeout    time.Duration // Timeout for writing messages
 }
 

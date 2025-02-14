@@ -4,22 +4,22 @@ services:
   mysql:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: gopaygate
+      MYSQL_ROOT_PASSWORD: ${DB_MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
     ports:
-      - "3306:3306"
+      - "${DB_SQL_PORT}:${DB_SQL_PORT}"
 
   redis:
     image: redis:6
     ports:
-      - "6379:6379"
+      - "${DB_REDIS_PORT}:${DB_REDIS_PORT}"
 
   kafka:
     image: confluentinc/cp-kafka:latest
     environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:${DB_KAFKA_PORT}
     ports:
-      - "9092:9092"
+      - "${DB_KAFKA_PORT}:${DB_KAFKA_PORT}"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest

@@ -1,23 +1,38 @@
 package rest
 
 import (
+	"github.com/Dung24-6/go-pay-gate/internal/store/aws"
+	"github.com/Dung24-6/go-pay-gate/internal/store/kafka"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
+	"gorm.io/gorm"
 )
 
-// Handler holds the dependencies for the HTTP handlers
-type Handler struct {
-	// Add your services here
+type HandlerConfig struct {
+	DB    *gorm.DB
+	Redis *redis.Client
+	AWS   *aws.AWSClients
+	Kafka *kafka.KafkaClient
 }
 
-// NewHandler creates a new HTTP handler
-func NewHandler() *Handler {
-	return &Handler{}
+type Handler struct {
+	db    *gorm.DB
+	redis *redis.Client
+	aws   *aws.AWSClients
+	kafka *kafka.KafkaClient
+}
+
+func NewHandler(cfg HandlerConfig) *Handler {
+	return &Handler{
+		db:    cfg.DB,
+		redis: cfg.Redis,
+		aws:   cfg.AWS,
+		kafka: cfg.Kafka,
+	}
 }
 
 // SetupRoutes configures the HTTP routes
-func SetupRoutes(r *gin.Engine) {
-	h := NewHandler()
-
+func SetupRoutes(r *gin.Engine, h *Handler) {
 	// Health check
 	r.GET("/health", h.HealthCheck)
 

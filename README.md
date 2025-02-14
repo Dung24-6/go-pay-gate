@@ -63,15 +63,46 @@ Create `config.yaml`:
 
 ```yaml
 server:
-  port: ":8080"
+  port: ":${SERVER_PORT}"
+  grpcPort: ":${GRPC_PORT"
   environment: "development"
+  writeTimeout: "10s"
 
 database:
   host: "localhost"
-  port: "3306"
-  user: "root"
-  password: "root"
-  dbname: "xxxx"
+  port: "${DB_SQL_PORT}"
+  user: "${DB_SQL_USER}"
+  password: "${DB_SQL_PASSWORD}"
+  dbname: "${DB_SQL_NAME}"
+  maxOpenConns: 100
+  maxIdleConns: 10
+  connMaxLifetime: "1h"
+
+redis:
+  host: "localhost"
+  port: "${DB_REDIS_PORT}"
+  password: ${DB_REDIS_PASSWORD}
+  db: 0
+  poolSize: 100
+  minIdleConns: 10
+  maxRetries: 3
+
+aws:
+  region: "ap-southeast-1"
+  accessKeyID: ""
+  secretAccessKey: ""
+  sessionToken: ""
+  s3Bucket: ${DB_AWS}
+  sqsQueueURL: ""
+  snsTopicARN: ""
+
+kafka:
+  brokers:
+    - "localhost:${DB_KAFKA_PORT}"
+  topic: "${DB_KAFKA_TOPIC}"
+  consumerGroup: "${KAFKA_GROUP}"
+  maxMessageBytes: 1048576  # 1MB
+  writeTimeout: "10s"
 ```
 
 ## Documentation
