@@ -11,6 +11,7 @@ import (
 
 	"github.com/Dung24-6/go-pay-gate/api/rest"
 	"github.com/Dung24-6/go-pay-gate/internal/config"
+	"github.com/Dung24-6/go-pay-gate/internal/repository"
 	"github.com/Dung24-6/go-pay-gate/internal/store/aws"
 	"github.com/Dung24-6/go-pay-gate/internal/store/kafka"
 	"github.com/Dung24-6/go-pay-gate/internal/store/mysql"
@@ -20,11 +21,12 @@ import (
 )
 
 type App struct {
-	db         *gorm.DB
-	redis      *redis.Client
-	aws        *aws.AWSClients
-	kafka      *kafka.KafkaClient
-	httpServer *http.Server
+	db          *gorm.DB
+	redis       *redis.Client
+	aws         *aws.AWSClients
+	kafka       *kafka.KafkaClient
+	httpServer  *http.Server
+	paymentRepo repository.PaymentRepository
 }
 
 func main() {
@@ -41,6 +43,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+	app.paymentRepo = repository.NewMySQLPaymentRepository(app.db)
 
 	// Initialize Redis
 	app.redis, err = redis.NewRedisClient(&cfg.Redis)
