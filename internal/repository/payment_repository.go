@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/Dung24-6/go-pay-gate/internal/kafka"
 	"github.com/Dung24-6/go-pay-gate/internal/model"
 	"gorm.io/gorm"
 )
@@ -16,12 +17,13 @@ type PaymentRepository interface {
 
 // paymentRepository implements PaymentRepository
 type paymentRepository struct {
-	db *gorm.DB
+	db            *gorm.DB
+	kafkaProducer *kafka.KafkaProducer
 }
 
 // NewPaymentRepository creates a new instance of PaymentRepository
-func NewPaymentRepository(db *gorm.DB) PaymentRepository {
-	return &paymentRepository{db: db}
+func NewPaymentRepository(db *gorm.DB, kafkaProducer *kafka.KafkaProducer) PaymentRepository {
+	return &paymentRepository{db: db, kafkaProducer: kafkaProducer}
 }
 
 // CreatePayment inserts a new payment record into the database

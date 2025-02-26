@@ -14,14 +14,18 @@ services:
     ports:
       - "${DB_REDIS_PORT}:${DB_REDIS_PORT}"
 
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:${DB_KAFKA_PORT}
-    ports:
-      - "${DB_KAFKA_PORT}:${DB_KAFKA_PORT}"
-
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "${DB_KAFKA_PORT}:${DB_KAFKA_PORT}"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_CLIENT_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:${DB_KAFKA_PORT}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper

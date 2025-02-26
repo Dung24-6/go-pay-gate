@@ -5,14 +5,12 @@ import (
 	"time"
 )
 
-// PaymentGateway defines the interface for payment gateway implementations
 type PaymentGateway interface {
 	CreatePayment(ctx context.Context, req *PaymentRequest) (*PaymentResponse, error)
 	QueryStatus(ctx context.Context, id string) (*PaymentStatus, error)
 	ProcessCallback(data []byte) (*CallbackResponse, error)
 }
 
-// PaymentRequest represents a payment creation request
 type PaymentRequest struct {
 	Amount         float64
 	Currency       string
@@ -29,7 +27,6 @@ type PaymentRequest struct {
 	Metadata       map[string]string
 }
 
-// PaymentResponse represents a payment creation response
 type PaymentResponse struct {
 	TransactionID string
 	PaymentURL    string
@@ -95,10 +92,10 @@ type Config struct {
 	MerchantName  string
 	ApiKey        string
 	ApiSecret     string
-	Environment   string // sandbox/production
+	Environment   string
 	ApiEndpoint   string
 	WebhookSecret string
-	Version       string // API version
+	Version       string
 	Timeout       time.Duration
 	RetryAttempts int
 }

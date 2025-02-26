@@ -3,19 +3,22 @@ package repository
 import (
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/Dung24-6/go-pay-gate/internal/kafka"
 	"github.com/Dung24-6/go-pay-gate/internal/model"
 	"gorm.io/gorm"
 )
 
 // MySQLPaymentRepository implements PaymentRepository using MySQL
 type MySQLPaymentRepository struct {
-	db *gorm.DB
+	db            *gorm.DB
+	kafkaProducer *kafka.KafkaProducer
 }
 
 // NewMySQLPaymentRepository creates a new instance
-func NewMySQLPaymentRepository(db *gorm.DB) *MySQLPaymentRepository {
-	return &MySQLPaymentRepository{db: db}
+func NewMySQLPaymentRepository(db *gorm.DB, kafkaProducer *kafka.KafkaProducer) *MySQLPaymentRepository {
+	return &MySQLPaymentRepository{db: db, kafkaProducer: kafkaProducer}
 }
 
 // CreatePayment inserts a new payment record
@@ -23,6 +26,13 @@ func (r *MySQLPaymentRepository) CreatePayment(ctx context.Context, payment *mod
 	if err := r.db.WithContext(ctx).Create(payment).Error; err != nil {
 		return fmt.Errorf("failed to create payment: %w", err)
 	}
+
+	// Publish sự kiện Kafka sau khi tạo payment thành công
+	err := r.kafkaProducer.ProduceMessage("payment_created", payment.ID)
+	if err != nil {
+		log.Printf("Failed to publish Kafka message: %v", err)
+	}
+
 	return nil
 }
 

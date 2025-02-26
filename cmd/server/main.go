@@ -11,6 +11,7 @@ import (
 
 	"github.com/Dung24-6/go-pay-gate/api/rest"
 	"github.com/Dung24-6/go-pay-gate/internal/config"
+	"github.com/Dung24-6/go-pay-gate/internal/logging"
 	"github.com/Dung24-6/go-pay-gate/internal/repository"
 	"github.com/Dung24-6/go-pay-gate/internal/store/aws"
 	"github.com/Dung24-6/go-pay-gate/internal/store/kafka"
@@ -30,6 +31,12 @@ type App struct {
 }
 
 func main() {
+	// Initial logger
+	logging.InitLogger()
+	defer logging.Sync()
+
+	logging.Logger.Info("Starting go-pay-gate server...")
+
 	// Load config
 	cfg, err := config.Load()
 	if err != nil {
